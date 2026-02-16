@@ -21,7 +21,6 @@ int main()
         if(IsKeyDown(KEY_DOWN)) ballY += 2;
         else if(IsKeyDown(KEY_UP)) ballY -= 2;
 
-
         //2. Update pozycji
 
         //3. Rysowanie następnej klatki
