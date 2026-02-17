@@ -3,6 +3,14 @@
 
 using namespace std;
 
+//Deklarowanie zmiennych globalnych
+int player_score = 0, cpu_score = 0;
+Color green = Color{38, 185, 154, 255};
+Color dark_green = Color{15, 120, 100, 255};
+Color light_green = Color{129, 204, 184, 255};
+Color yellow = Color{243, 213, 91, 255};
+Color blue = Color{0, 30, 100, 255};
+
 class Ball
 {
     public:
@@ -12,7 +20,7 @@ class Ball
 
     void draw()
     {
-        DrawCircle(x, y, radius, WHITE);
+        DrawCircle(x, y, radius, yellow);
     }
 
     void update()
@@ -21,7 +29,21 @@ class Ball
         y += speed_y;
 
         if(y + radius >= GetScreenHeight() || y - radius <= 0) speed_y *= -1;
-        if(x + radius >= GetScreenWidth() || x-radius <= 0) speed_x *= -1;
+
+        if(x + radius >= GetScreenWidth()){cpu_score++; resrtBall();} //cpu wins
+        if(x-radius <= 0){player_score++; resrtBall();} //player wins
+    }
+
+    void resrtBall()
+    {
+        x = GetScreenWidth()/2;
+        y = GetScreenHeight()/2;
+
+        int speed_chioces[2] = {-1, 1};
+        speed_x *= speed_chioces[GetRandomValue(0,1)];
+        speed_y *= speed_chioces[GetRandomValue(0,1)];
+        speed_x++;
+        speed_y++;  
     }
 };
 
@@ -41,7 +63,7 @@ class Paddle
 
     void draw()
     {
-        DrawRectangle(x, y, width, height, WHITE);
+        DrawRectangleRounded(Rectangle{x, y, width, height}, 0.8, 0, blue);
     }
 
     void update()
@@ -71,7 +93,7 @@ CpuPddle cpu;
 
 int main()
 {
-    //Deklarowanie zmiennych
+    //Deklarowanie zmiennych lokalnych
     const int screen_width = 1200, screen_height = 800;
 
     //Okno gry
@@ -102,16 +124,21 @@ int main()
     //Pętla gry
     while(WindowShouldClose() == false)
     {
-        //1. Input z klawiatury, myszki itp.
-
-        //2. Update pozycji
+        //1. Update pozycji 
         ball.update();
         player.update();
         cpu.update(ball.y);
 
+        //2. Sprawdzanie kolozji
+        if(CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player.x, player.y, player.width, player.height})) ball.speed_x *= -1;
+        if(CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{cpu.x, cpu.y, cpu.width, cpu.height})) ball.speed_x *= -1;
+
         //3. Rysowanie następnej klatki
         BeginDrawing();
-        ClearBackground(BLACK);
+        ClearBackground(dark_green);
+
+        DrawRectangle(screen_width/2, 0, screen_width/2, screen_height, green);
+        DrawCircle(screen_width/2, screen_height/2, 125, light_green);
 
         ball.draw();
 
@@ -121,6 +148,9 @@ int main()
         player.draw();
 
         DrawLine(screen_width/2, 0, screen_width/2, screen_height, WHITE);
+
+        DrawText(TextFormat("%i", cpu_score), screen_width/4 - 20, 20, 80, WHITE);
+        DrawText(TextFormat("%i", player_score), 3*screen_width/4 - 20, 20, 80, WHITE);
 
         EndDrawing();
     }
