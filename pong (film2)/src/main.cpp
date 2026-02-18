@@ -1,5 +1,6 @@
 #include <iostream>
 #include <raylib.h>
+#include <windows.h>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ class Ball
     public:
     float x, y;
     int radius;
-    int speed_x, speed_y;
+    float speed_x, speed_y;
 
     void draw()
     {
@@ -39,15 +40,25 @@ class Ball
         x = GetScreenWidth()/2;
         y = GetScreenHeight()/2;
 
+        if(speed_x < 0) speed_x += 0.5;
+        else speed_x += 0.5;
+        if(speed_y < 0) speed_y += 0.5;
+        else speed_y += 0.5;
+        
         int speed_chioces[2] = {-1, 1};
         speed_x *= speed_chioces[GetRandomValue(0,1)];
         speed_y *= speed_chioces[GetRandomValue(0,1)];
-        speed_x++;
-        speed_y++;  
+
+        // Coś tu jeszcze nie działa
+        //float direction_choise[2] = {-0.5, 0.5};
+        // speed_x += direction_choise[GetRandomValue(0,2)];
+        // speed_y += direction_choise[GetRandomValue(0,2)];
+
+
     }
 };
 
-class Paddle
+class Paddle 
 {
     protected:
     void limitMovment()
@@ -60,6 +71,7 @@ class Paddle
     float x, y;
     float width, height;
     int speed;
+    string name;
 
     void draw()
     {
@@ -78,10 +90,16 @@ class Paddle
 class CpuPddle :public Paddle
 {
     public:
-    void update(int ball_y)
+    void update(int ball_y, char w)
     {
-        if(y + height/2 > ball_y) y -= speed;
-        if(y + height/2 < ball_y) y += speed;
+        if(w == '1'){
+            if(y + height/2 > ball_y) y -= speed;
+            if(y + height/2 < ball_y) y += speed;
+        }
+        else{
+            if(IsKeyDown(KEY_S)) y += speed;
+            if(IsKeyDown(KEY_W)) y -= speed;
+        }
 
         limitMovment();
     }
@@ -96,6 +114,23 @@ int main()
     //Deklarowanie zmiennych lokalnych
     const int screen_width = 1200, screen_height = 800;
 
+    //Pytanie o tryb
+    bool exit = true;
+    char wybor;
+    while (exit)
+    {
+        system("cls"); //system("clear")
+        cout<<"Wybierz tryb:"<<endl;
+        cout<<"1. I gracz"<<endl;
+        cout<<"2. II graczy"<<endl;
+        wybor = getchar(); cout<<endl;
+        system("cls"); //system("clear")
+        cout<<"Wpisz nazwę gracza 1: "; cin>>player.name;
+        if(wybor == '2') {cout<<"Wpisz nazwa gracza 2: "; cin>>cpu.name;}
+        else if (wybor == '1') cpu.name = "CPU";
+        if((wybor == '1')||(wybor == '2')) exit = false;
+    }
+
     //Okno gry
     InitWindow(screen_width, screen_height, "Pong");
     //Liczba klatek
@@ -104,7 +139,7 @@ int main()
     //Nadawanie wartości zmiennym należących do obiektów
     //BALL
     ball.radius = 20;
-    ball.speed_x = 7; 
+    ball.speed_x = 7;
     ball.speed_y = 7;
     ball.x = screen_width/2;
     ball.y = screen_height/2;
@@ -127,7 +162,7 @@ int main()
         //1. Update pozycji 
         ball.update();
         player.update();
-        cpu.update(ball.y);
+        cpu.update(ball.y, wybor);
 
         //2. Sprawdzanie kolozji
         if(CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player.x, player.y, player.width, player.height})) ball.speed_x *= -1;
@@ -151,6 +186,20 @@ int main()
 
         DrawText(TextFormat("%i", cpu_score), screen_width/4 - 20, 20, 80, WHITE);
         DrawText(TextFormat("%i", player_score), 3*screen_width/4 - 20, 20, 80, WHITE);
+
+        
+        if(player_score == 1){
+            ClearBackground(dark_green);
+            DrawText(TextFormat("%i", player.name), screen_width/2, screen_height/2, 80, WHITE);
+            Sleep(5000);
+            WindowShouldClose() = true;
+        } else if(cpu_score == 1){
+            ClearBackground(dark_green);
+            DrawText(TextFormat("%i", cpu.name), screen_width/2, screen_height/2, 80, WHITE);
+            Sleep(5000);
+            WindowShouldClose() = true;
+        }
+        
 
         EndDrawing();
     }
