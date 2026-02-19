@@ -13,6 +13,7 @@ Color dark_green = Color{15, 120, 100, 255};
 Color light_green = Color{129, 204, 184, 255};
 Color yellow = Color{243, 213, 91, 255};
 Color blue = Color{0, 30, 100, 255};
+float timer = 0;
 
 class Ball
 {
@@ -26,31 +27,33 @@ class Ball
         DrawCircle(x, y, radius, yellow);
     }
 
-    void update()
+    void update(float &p, float &c)
     {
         x += speed_x;
         y += speed_y;
 
         if(y + radius >= GetScreenHeight() || y - radius <= 0) speed_y *= -1;
 
-        if(x + radius >= GetScreenWidth()){cpu_score++; resrtBall();} //cpu wins
-        if(x-radius <= 0){player_score++; resrtBall();} //player wins
+        if(x + radius >= GetScreenWidth()){cpu_score++; resrtBall(p, c);} //cpu wins
+        if(x-radius <= 0){player_score++; resrtBall(p, c);} //player wins
     }
 
-    void resrtBall()
+    void resrtBall(float &player_s, float &cpu_s)
     {
         x = GetScreenWidth()/2;
         y = GetScreenHeight()/2;
 
-        if(speed_x < 0) speed_x += 0.7;
-        else speed_x += 0.7;
-        if(speed_y < 0) speed_y += 0.7;
-        else speed_y += 0.7;
+        speed_x = 7;
+        speed_y = 7;
+
+        player_s = 6;
+        cpu_s = 6;
 
         int speed_chioces[2] = {-1, 1};
         speed_x *= speed_chioces[GetRandomValue(0,1)];
         speed_y *= speed_chioces[GetRandomValue(0,1)];
-        
+
+        timer = 0;
         
         // Coś tu jeszcze nie działa
         //float direction_choise[2] = {-0.5, 0.5};
@@ -71,7 +74,7 @@ class Paddle
     public:
     float x, y;
     float width, height;
-    int speed;
+    float speed;
     string name = "";
 
     void draw()
@@ -109,12 +112,25 @@ Ball ball;
 Paddle player;
 CpuPaddle cpu;
 
+void morespeed(char w)
+{
+    if(ball.speed_x < 0) ball.speed_x--;
+    else ball.speed_x++;
+    if(ball.speed_y < 0) ball.speed_y--;
+    else ball.speed_y++;
+
+    player.speed += 0.5;
+    if(w == '1')cpu.speed += 0.7;
+    else cpu.speed += 0.5;
+    return;
+}
+
 int main()
 {
     //Deklarowanie zmiennych lokalnych
     const int screen_width = 1200, screen_height = 800;
 
-    //Pytanie o tryb
+    //PYTANIE O TRYB
     bool exit = true;
     char wybor;
     while (exit)
@@ -136,13 +152,29 @@ int main()
     if((player.name.size() > 7)||(cpu.name.size() > 7)){
         system("cls"); //system("clear")
         cout<<"Niepoprawna nazwa gracza (max 7 slow)"<<endl;
-        this_thread::sleep_for(chrono::seconds(3));
+        this_thread::sleep_for(chrono::seconds(2));
         return 0;
+    }
+
+    //DO ILU PUNKTOW GRA
+    int max_punkty;
+    exit = true;
+    while (exit)
+    {
+        system("cls"); //system("clear")
+        cout<<"Do ilu punktow gracie? (1-15): "; cin>>max_punkty;
+        if((max_punkty > 15)||(max_punkty <= 0)) {
+            system("cls"); //system("clear")
+            cout<<"Niepoprawna liczba!"<<endl;
+            this_thread::sleep_for(chrono::seconds(2));
+            return 0;
+        }
+        else exit = false;
     }
 
 
 
-    //Okno gry
+    //OKNO GRY
     InitWindow(screen_width, screen_height, "Pong");
     //Liczba klatek
     SetTargetFPS(60);
@@ -167,31 +199,33 @@ int main()
     cpu.x = 10;
     cpu.y = screen_height/2 - cpu.height/2;
 
-    //Pętla gry
+    //PĘTLA GRY
     while(WindowShouldClose() == false)
     {
         //Wygrana jakiegoś gracza jak zdobędzie daną liczbę punktów
-        if((player_score == 1)||(cpu_score == 1)){
+        if((player_score == max_punkty)||(cpu_score == max_punkty)){
             string msg;
-            if(player_score == 1) msg = player.name+" wygrywa";
+            if(player_score == max_punkty) msg = player.name+" wygrywa";
             else msg = cpu.name+" wygrywa";
             BeginDrawing();
             ClearBackground(dark_green);
             DrawText(msg.c_str(), screen_width/4, screen_height/2 - 40, 80, WHITE);
             EndDrawing();
 
-            this_thread::sleep_for(chrono::seconds(5));
+            this_thread::sleep_for(chrono::seconds(4));
             break;
         }
 
-        //1. Update pozycji 
-        ball.update();
+
+        //1. Update pozycji
+        timer += GetFrameTime();
+        if(timer >= 1.5f) ball.update(player.speed, cpu.speed);
         player.update();
         cpu.update(ball.y, wybor);
 
         //2. Sprawdzanie kolozji
-        if(CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player.x, player.y, player.width, player.height})) ball.speed_x *= -1;
-        if(CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{cpu.x, cpu.y, cpu.width, cpu.height})) ball.speed_x *= -1;
+        if(CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player.x, player.y, player.width, player.height})) {ball.speed_x *= -1; morespeed(wybor);}
+        if(CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{cpu.x, cpu.y, cpu.width, cpu.height})) {ball.speed_x *= -1; morespeed(wybor);}
 
         //3. Rysowanie następnej klatki
         BeginDrawing();
