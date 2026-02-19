@@ -1,5 +1,8 @@
 #include <iostream>
 #include <raylib.h>
+#include <thread>
+#include <chrono>
+#include <conio.h>
 
 using namespace std;
 
@@ -69,7 +72,7 @@ class Paddle
     float x, y;
     float width, height;
     int speed;
-    string name;
+    string name = "";
 
     void draw()
     {
@@ -111,7 +114,6 @@ int main()
     //Deklarowanie zmiennych lokalnych
     const int screen_width = 1200, screen_height = 800;
 
-    //Tryb gry
     //Pytanie o tryb
     bool exit = true;
     char wybor;
@@ -121,13 +123,24 @@ int main()
         cout<<"Wybierz tryb:"<<endl;
         cout<<"1. I gracz"<<endl;
         cout<<"2. II graczy"<<endl;
-        wybor = getchar(); cout<<endl;
-        system("cls"); //system("clear")
-        cout<<"Wpisz nazwę gracza 1: "; cin>>player.name;
-        if(wybor == '2') {cout<<"Wpisz nazwa gracza 2: "; cin>>cpu.name;}
-        else if (wybor == '1') cpu.name = "CPU";
+        wybor = getch(); cout<<endl;
         if((wybor == '1')||(wybor == '2')) exit = false;
     }
+    
+    system("cls"); //system("clear")
+    cout<<"Wpisz nazwe gracza 1: "; cin>>player.name;
+    if(wybor == '2') {cout<<"Wpisz nazwe gracza 2: "; cin>>cpu.name;}
+    else if (wybor == '1') cpu.name = "CPU";
+
+    //sprawdzanie czy nazwa nie jest za długa
+    if((player.name.size() > 7)||(cpu.name.size() > 7)){
+        system("cls"); //system("clear")
+        cout<<"Niepoprawna nazwa gracza (max 7 slow)"<<endl;
+        this_thread::sleep_for(chrono::seconds(3));
+        return 0;
+    }
+
+
 
     //Okno gry
     InitWindow(screen_width, screen_height, "Pong");
@@ -157,6 +170,20 @@ int main()
     //Pętla gry
     while(WindowShouldClose() == false)
     {
+        //Wygrana jakiegoś gracza jak zdobędzie daną liczbę punktów
+        if((player_score == 1)||(cpu_score == 1)){
+            string msg;
+            if(player_score == 1) msg = player.name+" wygrywa";
+            else msg = cpu.name+" wygrywa";
+            BeginDrawing();
+            ClearBackground(dark_green);
+            DrawText(msg.c_str(), screen_width/4, screen_height/2 - 40, 80, WHITE);
+            EndDrawing();
+
+            this_thread::sleep_for(chrono::seconds(5));
+            break;
+        }
+
         //1. Update pozycji 
         ball.update();
         player.update();
