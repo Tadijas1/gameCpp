@@ -29,7 +29,8 @@ int main()
         //1. Wejście z klawiatury
         
         //2. Update obiektów
-
+        clock.Update();
+        
         //3. Rysowanie następniej klatki
         BeginDrawing();
         ClearBackground(BEŻOWY);
