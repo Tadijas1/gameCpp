@@ -52,7 +52,7 @@ obj/x64/Debug/tetrisoLinuxfilm5/grid.o: src/grid.cpp \
  /usr/include/c++/15/bits/uses_allocator.h \
  /usr/include/c++/15/bits/uses_allocator_args.h /usr/include/c++/15/tuple \
  build/external/raylib-master/src/raylib.h \
- /usr/lib/gcc/x86_64-linux-gnu/15/include/stdarg.h \
+ /usr/lib/gcc/x86_64-linux-gnu/15/include/stdarg.h src/colors.h \
  /usr/include/c++/15/iostream /usr/include/c++/15/ostream \
  /usr/include/c++/15/bits/ostream.h /usr/include/c++/15/ios \
  /usr/include/c++/15/iosfwd /usr/include/c++/15/bits/stringfwd.h \
@@ -230,6 +230,7 @@ src/grid.h:
 /usr/include/c++/15/tuple:
 build/external/raylib-master/src/raylib.h:
 /usr/lib/gcc/x86_64-linux-gnu/15/include/stdarg.h:
+src/colors.h:
 /usr/include/c++/15/iostream:
 /usr/include/c++/15/ostream:
 /usr/include/c++/15/bits/ostream.h:

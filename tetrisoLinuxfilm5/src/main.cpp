@@ -1,13 +1,22 @@
+#include "game.h"
 #include <iostream>
 #include <raylib.h>
-#include "grid.h"
 
 using namespace std;
 
 //zmienne globalne
 Color darkBlue = {44, 44, 127, 255};
+double lastUpdateTime = 0;
 
- 
+bool EventTriggered(double interval)
+{
+    double currentTime = GetTime();
+    if(currentTime - lastUpdateTime >= interval) {
+        lastUpdateTime = currentTime;
+        return true;
+    }
+    return false;
+}
 
 int main()
 {
@@ -18,20 +27,21 @@ int main()
     SetTargetFPS(60);
 
     //TWORZENIE OBIEKTÓW
-    Grid grid = Grid();
-    grid.print();
-
+    Game game = Game ();
+    
     //PĘTLA GRY
     while(WindowShouldClose() == false)
     {
-        BeginDrawing();
 		
         //1. Update obiektów i urządzenia wejścia
-        
-        //2. Kolizie
+        game.HandleInput();
+        //2. Kolizie i akcje czasowe
+        if (EventTriggered(0.2)) game.MoveBlockDown();
 
         //3. Rysowanie następniej klatki
+        BeginDrawing();
         ClearBackground(darkBlue);
+        game.Draw();
 
         EndDrawing();
     }

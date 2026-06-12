@@ -2,9 +2,10 @@
 #include <vector>
 #include <raylib.h>
 
+using namespace std;
+
 class Grid
 {
-    vector<Color> GetCellColors();
     vector<Color> colors;
     int numRows;
     int numColu;
@@ -14,5 +15,7 @@ class Grid
     Grid(int=20, int=10, int=30);
     void inicialize();
     void print();
+    void draw();
+    bool IsCellOutside(int row, int column);
     int grid[20][10];
 };
