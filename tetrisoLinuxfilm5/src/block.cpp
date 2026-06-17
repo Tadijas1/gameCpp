@@ -12,7 +12,7 @@ Block::Block()
 void Block::draw()
 {
     vector<Posicion> tiles = GetCellPosicions();
-    for(Posicion item: tiles) DrawRectangle(item.column * cellSize + 1, item.row * cellSize + 1, cellSize - 1, cellSize - 1, colors[id]);
+    for(Posicion item: tiles) DrawRectangle(item.column * cellSize + 11, item.row * cellSize + 11, cellSize - 1, cellSize - 1, colors[id]);
 }
 
 void Block::Move(int rows, int columns)

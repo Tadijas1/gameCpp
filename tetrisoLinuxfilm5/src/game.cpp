@@ -1,4 +1,4 @@
-#include "game.h"
+#include "game.hpp"
 #include <random>
 
 bool Game::IsBlockOutside()
@@ -16,6 +16,7 @@ Game::Game()
     blocks = GetAllBlocks();
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
+    gameOver = false;
 }
 
 Block Game::GetRandomBlock()
@@ -42,6 +43,7 @@ void Game::Draw()
 void Game::HandleInput()
 {
     int keyPressed = GetKeyPressed();
+    if(gameOver && keyPressed != 0){ gameOver = false; Reset();}
     switch(keyPressed) {
         case KEY_LEFT:
             MoveBlockLeft();
@@ -60,32 +62,62 @@ void Game::HandleInput()
 
 void Game::MoveBlockLeft()
 {
-    currentBlock.Move(0, -1);
-    if(IsBlockOutside()) currentBlock.Move(0, 1);
+    if(!gameOver) {
+        currentBlock.Move(0, -1);
+        if(IsBlockOutside() || BlockFits() == false) currentBlock.Move(0, 1);
+    }
 }
 
 void Game::MoveBlockRight()
 {
-    currentBlock.Move(0, 1);
-    if(IsBlockOutside()) currentBlock.Move(0, -1);
+    if(!gameOver) {
+        currentBlock.Move(0, 1);
+        if(IsBlockOutside() || BlockFits() == false) currentBlock.Move(0, -1);
+    }
 }
 
 void Game::MoveBlockDown()
 {
-    currentBlock.Move(1, 0);
-    if(IsBlockOutside()) {
-        currentBlock.Move(-1, 0);
-        LockBlock();
+    if(!gameOver) {
+        currentBlock.Move(1, 0);
+        if(IsBlockOutside() || BlockFits() == false) {
+            currentBlock.Move(-1, 0);
+            LockBlock();
+        }
     }
-    
-}
-
-void Game::RotateBlock()
-{
-    currentBlock.Rotation();
-    if(IsBlockOutside()) currentBlock.UndoRotation();
 }
 
 void Game::LockBlock()
 {
+    vector<Posicion> tiles = currentBlock.GetCellPosicions();
+    for(Posicion item: tiles) grid.grid[item.row][item.column] = currentBlock.id;
+    currentBlock = nextBlock;
+    if(BlockFits() == false) gameOver = true;
+    nextBlock = GetRandomBlock();
+    grid.ClearAllFullRows();
+}
+
+void Game::Reset()
+{
+    grid.inicialize();
+    blocks = GetAllBlocks();
+    currentBlock = GetRandomBlock();
+    nextBlock = GetRandomBlock();
+}
+
+void Game::RotateBlock()
+{
+    if(!gameOver) {
+        currentBlock.Rotation();
+        if(IsBlockOutside() || BlockFits() == false) currentBlock.UndoRotation();
+    }
+}
+
+bool Game::BlockFits()
+{
+    vector<Posicion> tiles = currentBlock.GetCellPosicions();
+    for(Posicion item: tiles) {
+        if(grid.IsCellEmpty(item.row, item.column) == false) return false;
+    }
+    return true;
 }

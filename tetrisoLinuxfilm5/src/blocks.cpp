@@ -90,7 +90,7 @@ class ZBlock :public Block
         id = 7;
         pozycje[0] = {Posicion(0,0), Posicion(0,1), Posicion(1,1), Posicion(1,2)};
         pozycje[1] = {Posicion(0,2), Posicion(1,1), Posicion(1,2), Posicion(2,1)};
-        pozycje[2] = {Posicion(1,0), Posicion(1,1), Posicion(2,0), Posicion(2,2)};
+        pozycje[2] = {Posicion(1,0), Posicion(1,1), Posicion(2,1), Posicion(2,2)};
         pozycje[3] = {Posicion(0,1), Posicion(1,0), Posicion(1,1), Posicion(2,0)};
         Move(0, 3);
     }

@@ -8,9 +8,12 @@ class Game
     vector<Block> blocks;
     Block currentBlock;
     Block nextBlock;
+    bool gameOver;
     bool IsBlockOutside();
+    bool BlockFits();
     void RotateBlock();
     void LockBlock();
+    void Reset();
 
     public:
     Game();
@@ -23,3 +26,5 @@ class Game
     void MoveBlockDown();
     Grid grid;
 };
+
+//ae :3 67

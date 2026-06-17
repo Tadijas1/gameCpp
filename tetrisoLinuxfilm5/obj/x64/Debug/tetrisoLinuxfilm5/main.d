@@ -1,5 +1,5 @@
 obj/x64/Debug/tetrisoLinuxfilm5/main.o: src/main.cpp \
- /usr/include/stdc-predef.h src/game.h src/grid.h \
+ /usr/include/stdc-predef.h src/game.hpp src/grid.h \
  /usr/include/c++/15/vector /usr/include/c++/15/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/15/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/15/bits/os_defines.h \
@@ -171,7 +171,7 @@ obj/x64/Debug/tetrisoLinuxfilm5/main.o: src/main.cpp \
  /usr/include/c++/15/bits/ostream.tcc /usr/include/c++/15/istream \
  /usr/include/c++/15/bits/istream.tcc
 /usr/include/stdc-predef.h:
-src/game.h:
+src/game.hpp:
 src/grid.h:
 /usr/include/c++/15/vector:
 /usr/include/c++/15/bits/requires_hosted.h:

@@ -1,4 +1,4 @@
-#include "game.h"
+#include "game.hpp"
 #include <iostream>
 #include <raylib.h>
 
@@ -21,10 +21,13 @@ bool EventTriggered(double interval)
 int main()
 {
     //TWORZENIE OKNA
-    InitWindow(300, 600, "Tetris");
+    InitWindow(500, 620, "Tetris");
 
     //FPS
     SetTargetFPS(60);
+
+    //Inportowanie czcionki
+    Font font = LoadFontEx("../Font/monogram.ttf", 64, 0, 0);
 
     //TWORZENIE OBIEKTÓW
     Game game = Game ();
@@ -36,7 +39,7 @@ int main()
         //1. Update obiektów i urządzenia wejścia
         game.HandleInput();
         //2. Kolizie i akcje czasowe
-        if (EventTriggered(0.2)) game.MoveBlockDown();
+        if (EventTriggered(0.3)) game.MoveBlockDown();
 
         //3. Rysowanie następniej klatki
         BeginDrawing();
