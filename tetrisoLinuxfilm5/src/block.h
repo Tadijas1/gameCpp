@@ -17,7 +17,7 @@ class Block
     int id;
     map<int, vector<Posicion>> pozycje;
     Block();
-    void draw();
+    void draw(int offsetX, int offsetY);
     void Move(int rows, int columns);
     void Rotation();
     void UndoRotation();

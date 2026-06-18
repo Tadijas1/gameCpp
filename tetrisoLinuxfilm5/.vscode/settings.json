@@ -7,5 +7,6 @@
 		"**/.DS_Store": true,
 		"**/*.o": true,
 		"**/*.exe": true,
-	}
+	},
+	"cmake.sourceDirectory": "/home/tadijas/Dokumenty/GitHub/gameCpp/tetrisoLinuxfilm5/build/external/raylib-master"
 }

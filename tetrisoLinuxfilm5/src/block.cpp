@@ -9,10 +9,10 @@ Block::Block()
     columnOffset = 0;
 }
 
-void Block::draw()
+void Block::draw(int offsetX, int offsetY)
 {
     vector<Posicion> tiles = GetCellPosicions();
-    for(Posicion item: tiles) DrawRectangle(item.column * cellSize + 11, item.row * cellSize + 11, cellSize - 1, cellSize - 1, colors[id]);
+    for(Posicion item: tiles) DrawRectangle(item.column * cellSize + offsetX, item.row * cellSize + offsetY, cellSize - 1, cellSize - 1, colors[id]);
 }
 
 void Block::Move(int rows, int columns)

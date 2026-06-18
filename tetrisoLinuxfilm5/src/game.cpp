@@ -1,15 +1,6 @@
 #include "game.hpp"
 #include <random>
 
-bool Game::IsBlockOutside()
-{
-    vector<Posicion> tiles = currentBlock.GetCellPosicions();
-    for(Posicion item: tiles) {
-        if(grid.IsCellOutside(item.row, item.column)) return true;
-    }
-    return false;
-}
-
 Game::Game()
 {
     grid = Grid();
@@ -17,12 +8,28 @@ Game::Game()
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
     gameOver = false;
+    score = 0;
+    wait=false;
+    InitAudioDevice();
+    music = LoadMusicStream("Sounds/music.mp3");
+    //music = LoadMusicStream("Sounds/tripoloski.mp3");
+    PlayMusicStream(music);
+    rotateSound = LoadSound("Sounds/rotate.mp3");
+    clearSound = LoadSound("Sounds/clear.mp3");
+}
+
+Game::~Game()
+{
+    UnloadMusicStream(music);
+    UnloadSound(rotateSound);
+    UnloadSound(clearSound);
+    CloseAudioDevice();
 }
 
 Block Game::GetRandomBlock()
 {
     if(blocks.empty()) blocks = GetAllBlocks();
-
+    
     int randomIndex = rand() % blocks.size();
     Block block = blocks[randomIndex];
     blocks.erase(blocks.begin() + randomIndex);
@@ -37,7 +44,39 @@ vector<Block> Game::GetAllBlocks()
 void Game::Draw()
 {
     grid.draw();
-    currentBlock.draw();
+    currentBlock.draw(11, 11);
+    switch (nextBlock.id)
+    {
+    case 3:
+        nextBlock.draw(255, 290);
+        break;
+    case 4:
+        nextBlock.draw(255, 280);
+        break;
+    default:
+        nextBlock.draw(270, 270);
+        break;
+    }
+}
+
+void Game::UpdateScore(int linesCleared, int moveDownPoints)
+{
+    switch (linesCleared)
+    {
+    case 1:
+        score += 100;    
+        break;
+    case 2:
+        score += 300;
+        break;
+    case 3:
+        score += 500;
+        break;
+    default:
+        break;
+    }
+
+    score += moveDownPoints;
 }
 
 void Game::HandleInput()
@@ -46,18 +85,28 @@ void Game::HandleInput()
     if(gameOver && keyPressed != 0){ gameOver = false; Reset();}
     switch(keyPressed) {
         case KEY_LEFT:
-            MoveBlockLeft();
+        MoveBlockLeft();
         break;
         case KEY_RIGHT:
-            MoveBlockRight();
+        MoveBlockRight();
         break;
         case KEY_DOWN:
-            MoveBlockDown();
+        MoveBlockDown();
+        UpdateScore(0, 1);
         break;
         case KEY_UP:
-            RotateBlock();
+        RotateBlock();
         break;
     }
+}
+
+bool Game::IsBlockOutside()
+{
+    vector<Posicion> tiles = currentBlock.GetCellPosicions();
+    for(Posicion item: tiles) {
+        if(grid.IsCellOutside(item.row, item.column)) return true;
+    }
+    return false;
 }
 
 void Game::MoveBlockLeft()
@@ -92,9 +141,13 @@ void Game::LockBlock()
     vector<Posicion> tiles = currentBlock.GetCellPosicions();
     for(Posicion item: tiles) grid.grid[item.row][item.column] = currentBlock.id;
     currentBlock = nextBlock;
-    if(BlockFits() == false) gameOver = true;
+    if(BlockFits() == false) {gameOver = true; wait=true;}
     nextBlock = GetRandomBlock();
-    grid.ClearAllFullRows();
+    int rowsCleared = grid.ClearAllFullRows();
+    if(rowsCleared != 0) {
+        PlaySound(clearSound);
+        UpdateScore(rowsCleared, 0);
+    }
 }
 
 void Game::Reset()
@@ -103,6 +156,7 @@ void Game::Reset()
     blocks = GetAllBlocks();
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
+    score = 0;
 }
 
 void Game::RotateBlock()
@@ -110,6 +164,7 @@ void Game::RotateBlock()
     if(!gameOver) {
         currentBlock.Rotation();
         if(IsBlockOutside() || BlockFits() == false) currentBlock.UndoRotation();
+        else PlaySound(rotateSound);
     }
 }
 
