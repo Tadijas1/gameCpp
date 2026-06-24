@@ -1,5 +1,10 @@
 #include "game.hpp"
+#include "colors.h"
 #include <random>
+#include <string>
+#include <fstream>
+
+using namespace std;
 
 Game::Game()
 {
@@ -10,9 +15,11 @@ Game::Game()
     gameOver = false;
     score = 0;
     wait=false;
+    game_started = false;
+    playerName = "Unnown player";
     InitAudioDevice();
-    music = LoadMusicStream("Sounds/music.mp3");
-    //music = LoadMusicStream("Sounds/tripoloski.mp3");
+    //music = LoadMusicStream("Sounds/music.mp3");
+    music = LoadMusicStream("Sounds/tripoloski.mp3");
     PlayMusicStream(music);
     rotateSound = LoadSound("Sounds/rotate.mp3");
     clearSound = LoadSound("Sounds/clear.mp3");
@@ -24,6 +31,31 @@ Game::~Game()
     UnloadSound(rotateSound);
     UnloadSound(clearSound);
     CloseAudioDevice();
+}
+
+void Game::InitNicname()
+{
+    string nicname;
+    while (!IsKeyPressed(KEY_ENTER) && WindowShouldClose() == false)
+    {
+        ClearBackground(darkBlue);
+        int key = GetCharPressed();
+        
+        while(key > 0)
+        {
+            if(key >= 32 && key<= 126) nicname += (char)key;
+            key = GetCharPressed();
+        }
+        
+        if(IsKeyPressed(KEY_BACKSPACE) && !nicname.empty()) nicname.pop_back();
+        
+        BeginDrawing();
+        DrawText("Type your's nicmane: ", 10, 10, 30, WHITE);
+        DrawText(nicname.c_str(), 15, 50, 30, WHITE);
+        EndDrawing();
+    }
+    if(!nicname.empty()) playerName = nicname;
+    return;
 }
 
 Block Game::GetRandomBlock()
@@ -39,6 +71,32 @@ Block Game::GetRandomBlock()
 vector<Block> Game::GetAllBlocks()
 {
     return {IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()};
+}
+
+void Game::ShowLiderboard()
+{
+    string line;
+    string Filescore;
+    bool waiting = true;
+    
+    while(WindowShouldClose() == false && waiting)
+    {
+        ifstream scores("gamefiles/scores.txt");
+        ClearBackground(darkBlue);
+        int keyPressed = GetKeyPressed();
+        int textPosY = 15;
+        BeginDrawing();
+        while (getline(scores, line) && getline(scores, Filescore))
+        {
+            string text = line+": "+Filescore;
+            DrawText(text.c_str(), 10, textPosY, 20, WHITE);
+            textPosY += 30;
+        }
+        DrawText("PRESS ANY KEY TO GO BACK...", 10, textPosY+20, 20, WHITE);
+        EndDrawing();
+        if(keyPressed != 0) waiting=false;
+        scores.close();
+    }
 }
 
 void Game::Draw()
@@ -82,7 +140,7 @@ void Game::UpdateScore(int linesCleared, int moveDownPoints)
 void Game::HandleInput()
 {
     int keyPressed = GetKeyPressed();
-    if(gameOver && keyPressed != 0){ gameOver = false; Reset();}
+    if(gameOver && keyPressed != 0){ gameOver = false; Reset(); game_started = false;}
     switch(keyPressed) {
         case KEY_LEFT:
         MoveBlockLeft();
@@ -136,12 +194,13 @@ void Game::MoveBlockDown()
     }
 }
 
+
 void Game::LockBlock()
 {
     vector<Posicion> tiles = currentBlock.GetCellPosicions();
     for(Posicion item: tiles) grid.grid[item.row][item.column] = currentBlock.id;
     currentBlock = nextBlock;
-    if(BlockFits() == false) {gameOver = true; wait=true;}
+    if(BlockFits() == false) {gameOver = true; wait=true; SaveScore();}
     nextBlock = GetRandomBlock();
     int rowsCleared = grid.ClearAllFullRows();
     if(rowsCleared != 0) {
@@ -157,6 +216,14 @@ void Game::Reset()
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
     score = 0;
+}
+
+void Game::SaveScore()
+{
+    ofstream scores("gamefiles/scores.txt", ios::app);
+    scores<<playerName<<endl;
+    scores<<score<<endl;
+    scores.close();
 }
 
 void Game::RotateBlock()
