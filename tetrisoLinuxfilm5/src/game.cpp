@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "colors.h"
+#include "score.h"
 #include <random>
 #include <string>
 #include <fstream>
@@ -12,8 +13,9 @@ Game::Game()
     blocks = GetAllBlocks();
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
+    scores = GetScores();
     gameOver = false;
-    score = 0;
+    player_score = 0;
     wait=false;
     game_started = false;
     playerName = "Unnown player";
@@ -36,7 +38,7 @@ Game::~Game()
 void Game::InitNicname()
 {
     string nicname;
-    while (!IsKeyPressed(KEY_ENTER) && WindowShouldClose() == false)
+    while ((!IsKeyPressed(KEY_ENTER) || nicname.empty()) && WindowShouldClose() == false)
     {
         ClearBackground(darkBlue);
         int key = GetCharPressed();
@@ -54,7 +56,8 @@ void Game::InitNicname()
         DrawText(nicname.c_str(), 15, 50, 30, WHITE);
         EndDrawing();
     }
-    if(!nicname.empty()) playerName = nicname;
+
+    playerName = nicname;
     return;
 }
 
@@ -73,30 +76,39 @@ vector<Block> Game::GetAllBlocks()
     return {IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()};
 }
 
-void Game::ShowLiderboard()
+vector<Score> Game::GetScores()
 {
-    string line;
-    string Filescore;
-    bool waiting = true;
-    
-    while(WindowShouldClose() == false && waiting)
+    ifstream file("gamefiles/scores.txt");
+    vector<Score> tab;
+    string name;
+    string score;
+
+    //Odczywywanie z pliku
+    while (getline(file, name) && getline(file, score))
     {
-        ifstream scores("gamefiles/scores.txt");
-        ClearBackground(darkBlue);
-        int keyPressed = GetKeyPressed();
-        int textPosY = 15;
-        BeginDrawing();
-        while (getline(scores, line) && getline(scores, Filescore))
-        {
-            string text = line+": "+Filescore;
-            DrawText(text.c_str(), 10, textPosY, 20, WHITE);
-            textPosY += 30;
-        }
-        DrawText("PRESS ANY KEY TO GO BACK...", 10, textPosY+20, 20, WHITE);
-        EndDrawing();
-        if(keyPressed != 0) waiting=false;
-        scores.close();
+        Score s;
+        s.name = name;
+        s.score = stoi(score);
+        tab.push_back(s);
     }
+    file.close();
+
+    //Sortowanie
+    for(int i=0;i<tab.size();i++) {
+		for(int j=1;j<tab.size()-i;j++) {
+		    if(tab[j-1].score<tab[j].score) {
+			    swap(tab[j-1], tab[j]);
+            }
+        }
+    }
+
+    //Zmioejszanie tablicy do 10
+    while (tab.size() > 10)
+    {
+        tab.pop_back();
+    }
+    
+    return tab;
 }
 
 void Game::Draw()
@@ -122,19 +134,19 @@ void Game::UpdateScore(int linesCleared, int moveDownPoints)
     switch (linesCleared)
     {
     case 1:
-        score += 100;    
+        player_score += 100;    
         break;
     case 2:
-        score += 300;
+        player_score += 300;
         break;
     case 3:
-        score += 500;
+        player_score += 500;
         break;
     default:
         break;
     }
 
-    score += moveDownPoints;
+    player_score += moveDownPoints;
 }
 
 void Game::HandleInput()
@@ -194,13 +206,17 @@ void Game::MoveBlockDown()
     }
 }
 
-
 void Game::LockBlock()
 {
     vector<Posicion> tiles = currentBlock.GetCellPosicions();
     for(Posicion item: tiles) grid.grid[item.row][item.column] = currentBlock.id;
     currentBlock = nextBlock;
-    if(BlockFits() == false) {gameOver = true; wait=true; SaveScore();}
+    if(BlockFits() == false) {
+        gameOver = true; 
+        wait=true; 
+        SaveScore(); 
+        scores = GetScores();
+    }
     nextBlock = GetRandomBlock();
     int rowsCleared = grid.ClearAllFullRows();
     if(rowsCleared != 0) {
@@ -215,15 +231,45 @@ void Game::Reset()
     blocks = GetAllBlocks();
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
-    score = 0;
+    player_score = 0;
 }
 
 void Game::SaveScore()
 {
-    ofstream scores("gamefiles/scores.txt", ios::app);
-    scores<<playerName<<endl;
-    scores<<score<<endl;
-    scores.close();
+    ofstream file("gamefiles/scores.txt", ios::app);
+
+    file<<playerName<<endl;
+    file<<player_score<<endl;
+    file.close();
+}
+
+void Game::ShowLiderboard()
+{
+    bool waiting = true;
+    int repet;
+    
+    if(scores.size()<10) repet = scores.size();
+    else repet = 10;
+    
+    while(WindowShouldClose() == false && waiting)
+    {
+        int keyPressed = GetKeyPressed();
+        int textPosY = 15;
+
+        ClearBackground(darkBlue);
+        BeginDrawing();
+        for (int i = 0; i < repet; i++)
+        {
+            string text = scores[i].name + ": " + to_string(scores[i].score);
+            DrawText(text.c_str(), 10, textPosY, 20, WHITE);
+            textPosY += 30;
+        }
+        DrawText("PRESS ANY KEY TO GO BACK...", 10, textPosY+20, 20, WHITE);
+        EndDrawing();
+        
+        if(keyPressed != 0)waiting = false;
+    }
+    return;
 }
 
 void Game::RotateBlock()

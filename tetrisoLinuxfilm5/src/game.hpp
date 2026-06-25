@@ -1,6 +1,7 @@
 #pragma once
 #include "grid.h"
 #include "blocks.cpp"
+#include "score.h"
 #include <string>
 
 using namespace std;
@@ -9,12 +10,16 @@ class Game
 {
     Block GetRandomBlock();
     vector<Block> GetAllBlocks();
+    vector<Score> GetScores();
+
     vector<Block> blocks;
+    vector<Score> scores;
     Grid grid;
     Block currentBlock;
     Block nextBlock;
     Sound rotateSound;
     Sound clearSound;
+    
     bool IsBlockOutside();
     bool BlockFits();
     void RotateBlock();
@@ -28,7 +33,7 @@ class Game
     Game();
     ~Game();
     Music music;
-    int score;
+    int player_score;
     bool gameOver;
     bool wait;
     bool game_started;

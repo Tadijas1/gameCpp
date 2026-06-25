@@ -59,8 +59,8 @@ obj/x64/Debug/tetrisoLinuxfilm5/main.o: src/main.cpp \
  /usr/include/c++/15/bits/node_handle.h \
  /usr/include/c++/15/bits/stl_map.h \
  /usr/include/c++/15/bits/stl_multimap.h \
- /usr/include/c++/15/bits/erase_if.h /usr/include/c++/15/string \
- /usr/include/c++/15/bits/stringfwd.h \
+ /usr/include/c++/15/bits/erase_if.h src/score.h \
+ /usr/include/c++/15/string /usr/include/c++/15/bits/stringfwd.h \
  /usr/include/c++/15/bits/char_traits.h \
  /usr/include/c++/15/bits/postypes.h /usr/include/c++/15/cwchar \
  /usr/include/wchar.h \
@@ -250,6 +250,7 @@ src/posicion.h:
 /usr/include/c++/15/bits/stl_map.h:
 /usr/include/c++/15/bits/stl_multimap.h:
 /usr/include/c++/15/bits/erase_if.h:
+src/score.h:
 /usr/include/c++/15/string:
 /usr/include/c++/15/bits/stringfwd.h:
 /usr/include/c++/15/bits/char_traits.h:
