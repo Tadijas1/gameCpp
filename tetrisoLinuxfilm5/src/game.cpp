@@ -14,22 +14,35 @@ Game::Game()
     currentBlock = GetRandomBlock();
     nextBlock = GetRandomBlock();
     scores = GetScores();
+    
     gameOver = false;
+    gameOverTime = 0.0;
+    canReset = false;
     player_score = 0;
-    wait=false;
     game_started = false;
     playerName = "Unnown player";
+    BlockSpeed = 0.3;
+
+    music_change = true;
     InitAudioDevice();
-    //music = LoadMusicStream("Sounds/music.mp3");
-    music = LoadMusicStream("Sounds/tripoloski.mp3");
-    PlayMusicStream(music);
+    orginal = LoadMusicStream("Sounds/orginal.mp3");
+    tripoloski = LoadMusicStream("Sounds/tripoloski.mp3");
+    chempions = LoadMusicStream("Sounds/chempions.mp3");
+    gameOverMusic = LoadMusicStream("Sounds/game_over.mp3");
     rotateSound = LoadSound("Sounds/rotate.mp3");
     clearSound = LoadSound("Sounds/clear.mp3");
+    PlayMusicStream(orginal);
+    PlayMusicStream(tripoloski);
+    PlayMusicStream(chempions);
+    PlayMusicStream(gameOverMusic);
 }
 
 Game::~Game()
 {
-    UnloadMusicStream(music);
+    UnloadMusicStream(orginal);
+    UnloadMusicStream(tripoloski);
+    UnloadMusicStream(chempions);
+    UnloadMusicStream(gameOverMusic);
     UnloadSound(rotateSound);
     UnloadSound(clearSound);
     CloseAudioDevice();
@@ -38,8 +51,13 @@ Game::~Game()
 void Game::InitNicname()
 {
     string nicname;
+
     while ((!IsKeyPressed(KEY_ENTER) || nicname.empty()) && WindowShouldClose() == false)
     {
+        //Muzyka
+        if(music_change) UpdateMusicStream(orginal);
+        else UpdateMusicStream(tripoloski);
+
         ClearBackground(darkBlue);
         int key = GetCharPressed();
         
@@ -152,7 +170,11 @@ void Game::UpdateScore(int linesCleared, int moveDownPoints)
 void Game::HandleInput()
 {
     int keyPressed = GetKeyPressed();
-    if(gameOver && keyPressed != 0){ gameOver = false; Reset(); game_started = false;}
+    if(gameOver && canReset) {
+        gameOver = false;
+        Reset();
+        game_started = false;   
+    }
     switch(keyPressed) {
         case KEY_LEFT:
         MoveBlockLeft();
@@ -212,10 +234,12 @@ void Game::LockBlock()
     for(Posicion item: tiles) grid.grid[item.row][item.column] = currentBlock.id;
     currentBlock = nextBlock;
     if(BlockFits() == false) {
-        gameOver = true; 
-        wait=true; 
+        gameOver = true;
+        gameOverTime = GetTime();
+        canReset = false;
         SaveScore(); 
         scores = GetScores();
+        BlockSpeed = 0.305;
     }
     nextBlock = GetRandomBlock();
     int rowsCleared = grid.ClearAllFullRows();
@@ -223,6 +247,7 @@ void Game::LockBlock()
         PlaySound(clearSound);
         UpdateScore(rowsCleared, 0);
     }
+    BlockSpeed -= 0.005;
 }
 
 void Game::Reset()
@@ -253,6 +278,9 @@ void Game::ShowLiderboard()
     
     while(WindowShouldClose() == false && waiting)
     {
+        //Music
+        UpdateMusicStream(chempions);
+
         int keyPressed = GetKeyPressed();
         int textPosY = 15;
 
@@ -260,8 +288,19 @@ void Game::ShowLiderboard()
         BeginDrawing();
         for (int i = 0; i < repet; i++)
         {
-            string text = scores[i].name + ": " + to_string(scores[i].score);
-            DrawText(text.c_str(), 10, textPosY, 20, WHITE);
+            //How many space betwen number and name
+            string space;
+            if(i==9) space = ":  ";
+            else space = ":   ";
+
+            //What color to pick
+            Color color;
+            if(i == 0) color = yellow;
+            else if(i == 1) color = silver;
+            else if(i == 2) color = brown;
+            else color = WHITE;
+            string text = to_string(i+1) + space + scores[i].name + ": " + to_string(scores[i].score);
+            DrawText(text.c_str(), 10, textPosY, 20, color);
             textPosY += 30;
         }
         DrawText("PRESS ANY KEY TO GO BACK...", 10, textPosY+20, 20, WHITE);

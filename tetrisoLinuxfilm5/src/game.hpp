@@ -17,6 +17,7 @@ class Game
     Grid grid;
     Block currentBlock;
     Block nextBlock;
+    Music chempions;
     Sound rotateSound;
     Sound clearSound;
     
@@ -32,10 +33,15 @@ class Game
     public:
     Game();
     ~Game();
-    Music music;
+    Music orginal;
+    Music tripoloski;
+    Music gameOverMusic;
     int player_score;
+    float BlockSpeed;
+    double gameOverTime;
+    bool canReset;
+    bool music_change;
     bool gameOver;
-    bool wait;
     bool game_started;
     string playerName;
     void ShowLiderboard();
