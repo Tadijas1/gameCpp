@@ -152,13 +152,16 @@ void Game::UpdateScore(int linesCleared, int moveDownPoints)
     switch (linesCleared)
     {
     case 1:
-        player_score += 100;    
+        player_score += 100;
         break;
     case 2:
         player_score += 300;
         break;
     case 3:
         player_score += 500;
+        break;
+    case 4:
+        player_score += 900;
         break;
     default:
         break;
@@ -185,6 +188,9 @@ void Game::HandleInput()
         case KEY_DOWN:
         MoveBlockDown();
         UpdateScore(0, 1);
+        break;
+        case KEY_LEFT_CONTROL:
+        RotateBlock();
         break;
         case KEY_UP:
         RotateBlock();
@@ -247,7 +253,7 @@ void Game::LockBlock()
         PlaySound(clearSound);
         UpdateScore(rowsCleared, 0);
     }
-    BlockSpeed -= 0.005;
+    BlockSpeed -= 0.001;
 }
 
 void Game::Reset()
