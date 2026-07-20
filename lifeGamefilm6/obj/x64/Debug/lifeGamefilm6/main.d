@@ -160,7 +160,12 @@ obj/x64/Debug/lifeGamefilm6/main.o: src/main.cpp \
  /usr/include/c++/15/bits/basic_ios.tcc \
  /usr/include/c++/15/bits/ostream.tcc /usr/include/c++/15/istream \
  /usr/include/c++/15/bits/istream.tcc \
- build/external/raylib-master/src/raylib.h src/game.hpp
+ build/external/raylib-master/src/raylib.h src/simulation.hpp \
+ src/grid.hpp /usr/include/c++/15/vector \
+ /usr/include/c++/15/bits/stl_uninitialized.h \
+ /usr/include/c++/15/bits/stl_vector.h \
+ /usr/include/c++/15/bits/stl_bvector.h \
+ /usr/include/c++/15/bits/vector.tcc
 /usr/include/stdc-predef.h:
 /usr/include/c++/15/iostream:
 /usr/include/c++/15/bits/requires_hosted.h:
@@ -362,4 +367,10 @@ obj/x64/Debug/lifeGamefilm6/main.o: src/main.cpp \
 /usr/include/c++/15/istream:
 /usr/include/c++/15/bits/istream.tcc:
 build/external/raylib-master/src/raylib.h:
-src/game.hpp:
+src/simulation.hpp:
+src/grid.hpp:
+/usr/include/c++/15/vector:
+/usr/include/c++/15/bits/stl_uninitialized.h:
+/usr/include/c++/15/bits/stl_vector.h:
+/usr/include/c++/15/bits/stl_bvector.h:
+/usr/include/c++/15/bits/vector.tcc:
