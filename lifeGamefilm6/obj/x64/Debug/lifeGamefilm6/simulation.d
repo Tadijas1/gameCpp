@@ -166,7 +166,7 @@ obj/x64/Debug/lifeGamefilm6/simulation.o: src/simulation.cpp \
  /usr/include/c++/15/bits/vector.tcc /usr/include/c++/15/utility \
  /usr/include/c++/15/bits/stl_relops.h \
  build/external/raylib-master/src/raylib.h src/simulation.hpp \
- src/grid.hpp
+ src/grid.hpp src/ui.hpp
 /usr/include/stdc-predef.h:
 /usr/include/c++/15/iostream:
 /usr/include/c++/15/bits/requires_hosted.h:
@@ -377,3 +377,4 @@ obj/x64/Debug/lifeGamefilm6/simulation.o: src/simulation.cpp \
 build/external/raylib-master/src/raylib.h:
 src/simulation.hpp:
 src/grid.hpp:
+src/ui.hpp:

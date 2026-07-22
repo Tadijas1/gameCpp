@@ -121,9 +121,11 @@ OBJECTS :=
 GENERATED += $(OBJDIR)/grid.o
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/simulation.o
+GENERATED += $(OBJDIR)/ui.o
 OBJECTS += $(OBJDIR)/grid.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/simulation.o
+OBJECTS += $(OBJDIR)/ui.o
 
 # Rules
 # #############################################
@@ -194,6 +196,9 @@ $(OBJDIR)/main.o: src/main.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/simulation.o: src/simulation.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ui.o: src/ui.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

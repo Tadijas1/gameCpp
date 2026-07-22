@@ -165,7 +165,7 @@ obj/x64/Debug/lifeGamefilm6/main.o: src/main.cpp \
  /usr/include/c++/15/bits/stl_uninitialized.h \
  /usr/include/c++/15/bits/stl_vector.h \
  /usr/include/c++/15/bits/stl_bvector.h \
- /usr/include/c++/15/bits/vector.tcc
+ /usr/include/c++/15/bits/vector.tcc src/ui.hpp
 /usr/include/stdc-predef.h:
 /usr/include/c++/15/iostream:
 /usr/include/c++/15/bits/requires_hosted.h:
@@ -374,3 +374,4 @@ src/grid.hpp:
 /usr/include/c++/15/bits/stl_vector.h:
 /usr/include/c++/15/bits/stl_bvector.h:
 /usr/include/c++/15/bits/vector.tcc:
+src/ui.hpp:

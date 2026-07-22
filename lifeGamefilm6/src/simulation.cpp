@@ -37,6 +37,7 @@ int Simulation::CountLiveNeighbors(int row, int column)
 void Simulation::Draw()
 {
     grid.Draw();
+    ui.Draw();
 }
 
 void Simulation::Input(int &FPS, int cellSize)
@@ -61,6 +62,9 @@ void Simulation::Input(int &FPS, int cellSize)
         break;
     case KEY_C:
         if(!running) grid.ClearGrid();
+        break;
+    case KEY_M:
+        ui.ChangeMode();
         break;
     }
 
@@ -93,4 +97,5 @@ void Simulation::Update()
 
         grid = gridCopy;
     }
+    ui.Update();
 }

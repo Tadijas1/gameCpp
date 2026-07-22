@@ -1,0 +1,34 @@
+# Folder z plikami kompilacji
+build/
+
+# Pliki wykonywalne
+*.out
+*.exe
+
+# Pliki obiektowe
+*.o
+*.obj
+
+# Biblioteki
+*.a
+*.so
+
+# Pliki zależności
+*.d
+
+# CMake (jeśli kiedyś będziesz używał)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+Makefile
+
+# Pliki debuggera
+*.gdb_history
+
+# VS Code (jeśli nie chcesz udostępniać ustawień)
+.vscode/
+
+# System
+.DS_Store
+Thumbs.db

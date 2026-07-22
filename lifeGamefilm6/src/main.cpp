@@ -38,7 +38,6 @@ int main()
             //3. Rysowanie następniej klatki
             ClearBackground(grey); 
             simulation.Draw();
-
         EndDrawing();
     }
 
