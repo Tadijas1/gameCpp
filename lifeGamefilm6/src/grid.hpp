@@ -15,9 +15,9 @@ class Grid
     int getValue(int row, int column);
     int getRows() {return rows;}
     int getColumns() {return columns;}
-    void ChangeValue(int row, int column);
+    void ChangeValue(int row, int column, int value);
     void ClearGrid();
     void SetValue(int row, int column, int value);
-    void FillRandomValue();
+    void FillRandomValue(int mode);
     void Draw();
 };

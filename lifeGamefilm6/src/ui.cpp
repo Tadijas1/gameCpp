@@ -2,7 +2,7 @@
 
 #include "ui.hpp"
 
-void Ui::Draw(int FPS)
+void Ui::Draw(int FPS, int mode)
 {
     //rysowanie licznika fps
     int textWidth = MeasureText(TextFormat("%i", FPS), TextSize);
