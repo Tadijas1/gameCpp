@@ -34,10 +34,10 @@ int Simulation::CountLiveNeighbors(int row, int column)
     return liveNeighbors;
 }
 
-void Simulation::Draw()
+void Simulation::Draw(int FPS)
 {
     grid.Draw();
-    ui.Draw();
+    ui.Draw(FPS);
 }
 
 void Simulation::Input(int &FPS, int cellSize)
@@ -97,5 +97,4 @@ void Simulation::Update()
 
         grid = gridCopy;
     }
-    ui.Update();
 }
