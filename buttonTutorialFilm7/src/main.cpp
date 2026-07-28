@@ -1,5 +1,6 @@
 #include <iostream>
 #include <raylib.h>
+#include <raymath.h>
 
 #include "button.hpp"
 
@@ -25,8 +26,8 @@ int main()
     SetTargetFPS(FPS);
 
     //TWORZENIE OBIEKTÓW
-    Button startButton = Button("pictures/button_start.png", {210,20}, 0.5);
-    Button exitButton = Button("pictures/button_exit.png", {210,200}, 0.5);
+    Button startButton = Button("pictures/button_start.png", 0.5); startButton.GetCenter(windowWigth, windowHeight, -100);
+    Button exitButton = Button("pictures/button_exit.png", 0.5); exitButton.GetCenter(windowWigth, windowHeight, 100);
 
     //PĘTLA GRY
     while(WindowShouldClose() == false && exit == false)

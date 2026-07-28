@@ -8,9 +8,10 @@ class Button
     bool isClicked;
 
     public:
-    Button(const char* imagePath, Vector2 imagePosicion, float scale);
+    Button(const char* imagePath, float scale);
     ~Button();
 
+    void GetCenter(int windowWigth, int windowHeight, int heightOffset);
     bool isPressed(Vector2 mousePos, bool mousePressd);
     void Draw();
 };

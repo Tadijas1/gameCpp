@@ -1,6 +1,6 @@
 #include "button.hpp"
 
-Button::Button(const char *imagePath, Vector2 imagePosicion, float scale)
+Button::Button(const char *imagePath, float scale)
 {
     Image image = LoadImage(imagePath);
     
@@ -11,13 +11,20 @@ Button::Button(const char *imagePath, Vector2 imagePosicion, float scale)
     texture = LoadTextureFromImage(image);
     UnloadImage(image);
 
-    posicion = imagePosicion;
+    posicion = {0, 0};
     isClicked = false;
 }
 
 Button::~Button()
 {
     UnloadTexture(texture);
+}
+
+void Button::GetCenter(int windowWigth, int windowHeight, int heightOffset)
+{
+    int withCenter = windowWigth/2 - texture.width/2;
+    int heightPosicion = (windowHeight - texture.height)/2 + heightOffset;
+    posicion = (Vector2){withCenter, heightPosicion};
 }
 
 bool Button::isPressed(Vector2 mousePos, bool mousePressd)
