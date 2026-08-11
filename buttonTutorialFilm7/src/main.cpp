@@ -6,6 +6,8 @@
 
 using namespace std;
 
+// test lazygit'a
+
 int main()
 {
     //zmienne lokalne
