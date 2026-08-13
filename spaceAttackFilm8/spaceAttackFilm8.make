@@ -118,8 +118,14 @@ endif
 GENERATED :=
 OBJECTS :=
 
+GENERATED += $(OBJDIR)/game.o
+GENERATED += $(OBJDIR)/laser.o
 GENERATED += $(OBJDIR)/main.o
+GENERATED += $(OBJDIR)/spaceship.o
+OBJECTS += $(OBJDIR)/game.o
+OBJECTS += $(OBJDIR)/laser.o
 OBJECTS += $(OBJDIR)/main.o
+OBJECTS += $(OBJDIR)/spaceship.o
 
 # Rules
 # #############################################
@@ -183,7 +189,16 @@ endif
 # File Rules
 # #############################################
 
+$(OBJDIR)/game.o: src/game.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/laser.o: src/laser.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: src/main.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/spaceship.o: src/spaceship.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

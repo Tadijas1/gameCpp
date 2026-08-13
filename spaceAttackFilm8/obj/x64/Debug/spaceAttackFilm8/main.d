@@ -160,7 +160,7 @@ obj/x64/Debug/spaceAttackFilm8/main.o: src/main.cpp \
  /usr/include/c++/15/bits/basic_ios.tcc \
  /usr/include/c++/15/bits/ostream.tcc /usr/include/c++/15/istream \
  /usr/include/c++/15/bits/istream.tcc \
- build/external/raylib-master/src/raylib.h
+ build/external/raylib-master/src/raylib.h src/game.hpp src/spaceship.hpp
 /usr/include/stdc-predef.h:
 /usr/include/c++/15/iostream:
 /usr/include/c++/15/bits/requires_hosted.h:
@@ -362,3 +362,5 @@ obj/x64/Debug/spaceAttackFilm8/main.o: src/main.cpp \
 /usr/include/c++/15/istream:
 /usr/include/c++/15/bits/istream.tcc:
 build/external/raylib-master/src/raylib.h:
+src/game.hpp:
+src/spaceship.hpp:
