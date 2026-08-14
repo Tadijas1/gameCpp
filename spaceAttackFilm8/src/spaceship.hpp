@@ -7,6 +7,7 @@ class Spaceship
 {
     Texture2D texture;
     Vector2 posicion;
+    double lastFireTime;
 
     public:
     std::vector<Laser> lasers;
@@ -17,6 +18,5 @@ class Spaceship
     void Move(float speed);
     void FireLaser();
 
-    void Update();
     void Draw();
 };

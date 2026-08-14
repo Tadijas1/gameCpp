@@ -9,10 +9,13 @@ void Game::Input()
 
 void Game::UpdateAll()
 {
-    spaceship.Update();
+    for(int i = 0; i < spaceship.lasers.size(); i++) {
+        spaceship.lasers[i].Update();
+        if(spaceship.lasers[i].IsOutOffWindow()) spaceship.lasers.erase(spaceship.lasers.begin() + i);
+    }
 }
-
 void Game::DrawAll()
 {
     spaceship.Draw();
+    for(auto& laser: spaceship.lasers) laser.Draw();
 }
