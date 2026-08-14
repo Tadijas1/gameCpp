@@ -2,7 +2,6 @@
 #include <raylib.h>
 
 #include "game.hpp"
-// #include "laser.hpp"
 
 //test lazygit :3
 
@@ -23,8 +22,6 @@ int main()
 
     //TWORZENIE OBIEKTÓW
     Game game = Game();
-    // Laser laser = Laser({400, 200});
-
     //PĘTLA GRY
     while(WindowShouldClose() == false)
     {
@@ -33,13 +30,11 @@ int main()
 
         //2. Update obiektów i urządzenia wejścia
         game.UpdateAll();
-        // laser.Update();
 
         //3. Rysowanie następniej klatki
         BeginDrawing();
             ClearBackground(GRAY);
             game.DrawAll();
-            // laser.Draw();
         EndDrawing();
     }
 

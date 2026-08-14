@@ -10,7 +10,8 @@ class Laser
     public:
     Laser(Vector2 posicion, int speed = -2);
 
-    void Update();
+    bool IsOutOffWindow();
 
+    void Update();
     void Draw();
 };

@@ -1,4 +1,5 @@
 #include "laser.hpp"
+#include <iostream>
 
 Laser::Laser(Vector2 posicion, int speed)
 {
@@ -8,9 +9,15 @@ Laser::Laser(Vector2 posicion, int speed)
     else color = {82, 32, 129, 255};
 }
 
+bool Laser::IsOutOffWindow()
+{
+    if(posicion.y > GetScreenHeight() + 15 || posicion.y < 0) return true;
+    else return false;
+}
+
 void Laser::Update()
 {
-    posicion.y += speed; 
+    posicion.y += speed;
 }
 
 void Laser::Draw()
