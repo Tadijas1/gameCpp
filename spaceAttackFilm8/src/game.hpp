@@ -10,6 +10,8 @@ class Game
     Game() {};
     ~Game() {};
 
+    void KillingLasers();
+
     void Input();
     void UpdateAll();
     void DrawAll();
